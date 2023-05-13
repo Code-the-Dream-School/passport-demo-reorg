@@ -9,6 +9,13 @@
 <body>
    <p>This page is restricted.  You can't see it unless you are logged on.</p>
    <p>You have visited this page <%= pageCount %> times since logon.</p>
-   <p><a href="/"">Back to the home page.</a></p>
+   <p>The secret string is <%= secretString %></p>
+   <p>To change it, put in a new value below</p>
+   <form action="/restricted" method="POST">
+     <input name="secretString" type="text" />
+     <button>Submit</button>
+     <input type="hidden" name="_csrf" value="<%= _csrf %>">
+    </form>
+  <p><a href="/"">Back to the home page.</a></p>
 </body>
 </html>
