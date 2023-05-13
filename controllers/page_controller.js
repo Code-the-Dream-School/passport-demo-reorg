@@ -1,3 +1,4 @@
+let secretString = "Beginning value";
 const User = require("../models/User");
 
 const render_index = (req, res) => {
@@ -32,13 +33,21 @@ const render_restricted = (req, res) => {
   } else {
     req.session.pageCount++;
   }
-  res.render("pages/restricted", { pageCount: req.session.pageCount });
+  res.render("pages/restricted", {
+    pageCount: req.session.pageCount,
+    secretString,
+  });
+};
+
+const post_restricted = (req, res) => {
+  secretString = req.body.secretString;
+  res.redirect("/restricted");
 };
 
 const log_out = (req, res) => {
   req.session.destroy(function (err) {
     if (err) {
-      console.log(err)
+      console.log(err);
     }
     res.redirect("/");
   });
@@ -49,5 +58,6 @@ module.exports = {
   render_sign_up,
   sign_up,
   render_restricted,
+  post_restricted,
   log_out,
 };

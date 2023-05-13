@@ -4,6 +4,7 @@ require("express-async-errors");
 const session = require("express-session");
 const passport = require("passport");
 const MongoDBStore = require("connect-mongodb-session")(session);
+const csrf = require("host-csrf");
 
 const passport_init = require("./passport/passport_init");
 const connectDB = require("./db/connect");
@@ -39,6 +40,16 @@ passport_init();
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.urlencoded({ extended: false }));
+app.use(require("cookie-parser")(process.env.SESSION_SECRET));
+let csrf_development_mode = true;
+if (app.get("env") === "production") {
+  csrf_development_mode = false;
+  app.set("trust proxy", 1);
+}
+const csrf_options = {
+  development_mode: csrf_development_mode,
+};
+app.use(csrf(csrf_options));
 
 app.use(setCurrentUser);
 app.use("/", page_router);
